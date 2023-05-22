@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { register } from './controllers/auth.js';
 
 // configuration 
 // when type is module we can access filepath in this way
@@ -42,6 +43,10 @@ const storage = multer.diskStorage({
 //   anytime need to upload the file we can use this variable
 const upload = multer({ storage })
 
+// routes with files
+// this is meddleware function which will run before it hit the input
+app.post("/auth/register", upload.single("picture"), register);
+
 // mongoose setup
 const PORT = process.env.PORT || 6000;
 mongoose.connect(process.env.MONGO_URL, {
@@ -54,3 +59,7 @@ mongoose.connect(process.env.MONGO_URL, {
 }).catch((error) => {
     console.log(`${error}`)
 })
+
+// authentication  - when register and login is authentication
+// authorization - when someone is already login than only can perform some action is authorization
+// eg- only when user login than only can get list of friend/ post
