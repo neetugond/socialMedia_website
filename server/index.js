@@ -27,6 +27,18 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
 
-
-
+// file storage
+// this way we can save file
+const storage = multer.diskStorage({
+    //anyone will come to this website than file will save in this public/assets destination
+    destination: function (req, file, cb) {
+      cb(null, 'public/assets')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    }
+  })
+  
+//   anytime need to upload the file we can use this variable
+  const upload = multer({storage})
 
