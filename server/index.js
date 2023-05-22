@@ -11,7 +11,8 @@ import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { register } from './controllers/auth.js';
-import {authRoutes} from './routes/auth.js'
+import  authRoutes from './routes/auth.js'
+import userRoutes from "./routes/users.js" 
 import { verifyToken } from './middleware/auth.js';
 
 // configuration 
@@ -52,7 +53,7 @@ const upload = multer({ storage })
 app.post("/auth/register", upload.single("picture"), register);
 
 app.use('/auth', authRoutes);
-
+app.use('/users', userRoutes);
 // mongoose setup
 const PORT = process.env.PORT || 6000;
 mongoose.connect(process.env.MONGO_URL, {
