@@ -12,6 +12,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { register } from './controllers/auth.js';
 import {authRoutes} from './routes/auth.js'
+import { verifyToken } from './middleware/auth.js';
 
 // configuration 
 // when type is module we can access filepath in this way
