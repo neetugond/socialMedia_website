@@ -2,11 +2,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-// register user
 
 // api call from frontend to backend and backenf to database
 // req = this will provide request body from frontend
 // res = response will going to send back tp the frontend
+
+// register user authentication
 export const register = async (req, res) => {
     try {
         const {
@@ -44,4 +45,26 @@ export const register = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
+};
+
+// logging  authentication
+export const login = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email: email });
+      if (!user) return res.status(400).json({ msg: "User does not exist. " });
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
+  
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      delete user.password;
+      res.status(200).json({ token, user });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+
+// authentication  - when register and login is authentication
+// authorization - when someone is already login than only can perform some action is authorization
+// eg- only when user login than only can get list of friend/ post
