@@ -32,13 +32,25 @@ app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
 const storage = multer.diskStorage({
     //anyone will come to this website than file will save in this public/assets destination
     destination: function (req, file, cb) {
-      cb(null, 'public/assets')
+        cb(null, 'public/assets')
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname)
+        cb(null, file.originalname)
     }
-  })
-  
-//   anytime need to upload the file we can use this variable
-  const upload = multer({storage})
+})
 
+//   anytime need to upload the file we can use this variable
+const upload = multer({ storage })
+
+// mongoose setup
+const PORT = process.env.PORT || 6000;
+mongoose.connect(process.env.MONGO_URL, {
+    useNewurlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    app.listen(PORT, () => {
+        console.log(`server is running on ${PORT}`)
+    })
+}).catch((error) => {
+    console.log(`${error}`)
+})
